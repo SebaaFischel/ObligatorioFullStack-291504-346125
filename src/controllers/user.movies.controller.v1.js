@@ -8,11 +8,29 @@ export const addMovie = async (req, res) => {
         res.status(403).json({ message: e.message });
     }
 };
+
 export const getMovies = async (req, res) => {
     try {
         const movies = await userMoviesService.getUserMovies(req.idUsu);
+        if (movies.length === 0) {
+            return res.status(200).json({ message: "No tiene peliculas en su biblioteca" });
+        }
         res.status(200).json(movies);
     } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+};
+
+export const deleteMovie = async (req, res) => {
+    try {
+        const peliculaEliminada = await userMoviesService.deleteUserMovie(req.idUsu, Number(req.params.tmdbId));
+        res.status(200).json({
+            message: `Pelicula ${peliculaEliminada.titulo} eliminada de la biblioteca del usuario`
+        });
+    } catch (e) {
+        if (e.message === "No se encontró la película en la biblioteca del usuario") {
+            return res.status(404).json({ message: e.message });
+        }
         res.status(500).json({ message: e.message });
     }
 };

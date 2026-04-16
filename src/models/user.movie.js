@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 const userMovieSchema = new mongoose.Schema(
     {
         userId: {
@@ -10,11 +11,11 @@ const userMovieSchema = new mongoose.Schema(
             type: Number,
             required: true
         },
-        titulo: { // Cambiado de title a titulo
+        titulo: {
             type: String,
             required: true
         },
-        rutaPoster: { // Cambiado de posterPath a rutaPoster
+        rutaPoster: {
             type: String
         },
         rating: {
@@ -38,6 +39,9 @@ const userMovieSchema = new mongoose.Schema(
         collection: "peliculas_usuarios"
     }
 );
+
 userMovieSchema.index({ userId: 1, tmdbId: 1 }, { unique: true });
+
 const UserMovie = mongoose.model("UserMovie", userMovieSchema);
+
 export default UserMovie;
