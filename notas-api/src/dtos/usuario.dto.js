@@ -1,0 +1,13 @@
+const usuarioDto = (usuario) => {
+    return {
+        id: usuario._id,
+        nombreUsuario: usuario.nombreUsuario,
+        noombre: usuario.nombre,
+        apellido: usuario.apellido,
+        mail: usuario.mail,
+        rol: usuario.rol,
+        createdAt: usuario.createdAt
+    }
+}
+
+export { usuarioDto }
