@@ -4,6 +4,6 @@ import { authMiddleware } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.put("/upgrade/:id", authMiddleware, cambiarPlan);
+router.put("/upgrade", authMiddleware, cambiarPlan);
 
 export default router;

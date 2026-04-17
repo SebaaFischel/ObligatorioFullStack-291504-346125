@@ -9,6 +9,7 @@ export const getUserMovies = async (userId) => {
 export const addUserMovie = async (datosEntrada, userId) => {
     const usuario = await User.findById(userId);
     if (!usuario) throw new Error("Usuario no encontrado");
+    // Lógica refinada de límites: premium SIEMPRE es ilimitado
     if (usuario.plan === "plus") {
         const cantidadPeliculas = await UserMovie.countDocuments({ userId });
         if (cantidadPeliculas >= 4) {
@@ -16,17 +17,38 @@ export const addUserMovie = async (datosEntrada, userId) => {
         }
     }
     const detallesTMDB = await obtenerDetallePeliculaPorId(datosEntrada.tmdbId);
-
-    const nuevaPelicula = await UserMovie.create({
-        userId: userId,
-        tmdbId: datosEntrada.tmdbId,
-        titulo: detallesTMDB.titulo,
-        rutaPoster: detallesTMDB.rutaPoster,
-        rating: datosEntrada.rating,
-        review: datosEntrada.review,
-        categoryId: datosEntrada.categoryId
-    });
-    return nuevaPelicula;
+    try {
+        const nuevaPelicula = await UserMovie.create({
+            userId: userId,
+            tmdbId: datosEntrada.tmdbId,
+            titulo: detallesTMDB.titulo,
+            rutaPoster: detallesTMDB.rutaPoster,
+            rating: datosEntrada.rating,
+            review: datosEntrada.review,
+            categoryId: datosEntrada.categoryId
+        });
+        return nuevaPelicula;
+    } catch (error) {
+        if (error.code === 11000) {
+            throw new Error("Esta película ya existe en tu biblioteca");
+        }
+        throw error;
+    }
+};
+export const updateUserMovie = async (userId, tmdbId, datos) => {
+    const peliculaActualizada = await UserMovie.findOneAndUpdate(
+        { userId, tmdbId },
+        {
+            rating: datos.rating,
+            review: datos.review,
+            categoryId: datos.categoryId
+        },
+        { new: true, runValidators: true }
+    );
+    if (!peliculaActualizada) {
+        throw new Error("No se encontró la película para actualizar");
+    }
+    return peliculaActualizada;
 };
 
 export const deleteUserMovie = async (userId, tmdbId) => {
