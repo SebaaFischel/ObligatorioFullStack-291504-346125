@@ -27,6 +27,10 @@ app.use(loggerMiddleware);
 app.use("/v1/ping", pingRouter);
 app.use("/v1/auth", authRouter);
 
+app.get("/", (req, res) => {
+    res.json({ message: "Obligatorio 1 - API Running" });
+});
+
 // Rutas Privadas
 app.use(authMiddleware);
 app.use("/v1/categories", categoriasRouter);
@@ -34,10 +38,6 @@ app.use("/v1/users", usuariosRouter);
 app.use("/v1/user-movies", peliculasRouter);
 app.use("/v1/tmdb", tmdbRouter);
 app.use("/v1/ia", iaRouter);
-
-app.get("/", (req, res) => {
-    res.json({ message: "Obligatorio 1 - API Running" });
-});
 
 conectarDB();
 
