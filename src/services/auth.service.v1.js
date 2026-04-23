@@ -15,7 +15,7 @@ const doLogin = async ({ mail, contrasena }) => {
         if (esValida) {
             const token = jwt.sign(
                 { idUsu: u._id.toString(), rolUsu: u.rol },
-                process.env.JWT_SECRET_KEY,
+                process.env.JWT_SECRET,
                 { expiresIn: "1h" }
             );
 

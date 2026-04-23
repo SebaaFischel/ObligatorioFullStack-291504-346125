@@ -1,9 +1,9 @@
 import express from "express";
-import { 
-    obtenerCategorias, 
-    crearCategoria, 
-    actualizarCategoria, 
-    eliminarCategoria 
+import {
+    obtenerCategorias,
+    crearCategoria,
+    actualizarCategoria,
+    eliminarCategoria
 } from "../controllers/categorias.controller.js";
 import { crearCategoriaValidatorMiddleware } from "../middlewares/crear.categoria.validator.middleware.js";
 

@@ -7,7 +7,7 @@ const authMiddleware = (req, res, next) => {
         return;
     }
     try {
-        const tokenUsu = jwt.verify(token, process.env.JWT_SECRET_KEY)
+        const tokenUsu = jwt.verify(token, process.env.JWT_SECRET)
         req.idUsu = tokenUsu.idUsu
         req.rolUsu = tokenUsu.rolUsu
         next()
