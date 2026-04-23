@@ -1,9 +1,9 @@
 import express from "express";
+import { buscarPelicula, obtenerDetalle } from "../controllers/tmdb.controller.v1.js";
 
-import { buscarPeliculas } from "../controllers/tmdb.controller.v1.js";
-import { authMiddleware } from "../middleware/auth.middleware.js";
+const tmdbRouter = express.Router();
 
-const router = express.Router();
+tmdbRouter.get("/search", buscarPelicula);
+tmdbRouter.get("/movie/:id", obtenerDetalle);
 
-router.get("/buscar", authMiddleware, buscarPeliculas);
-export default router;
+export { tmdbRouter };

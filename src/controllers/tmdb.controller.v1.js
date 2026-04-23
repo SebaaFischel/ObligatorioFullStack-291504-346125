@@ -1,13 +1,23 @@
-import { buscarPeliculasEnTMDB } from "../services/tmdb.service.v1.js";
+import * as tmdbService from "../services/tmdb.service.v1.js";
 
-export const buscarPeliculas = async (req, res) => {
+const buscarPelicula = async (req, res) => {
     try {
-        const { busqueda } = req.query;
-        if (!busqueda) return res.status(400).json({ message: "El parámetro de búsqueda es requerido" });
-
-        const resultados = await buscarPeliculasEnTMDB(busqueda);
-        res.status(200).json(resultados);
+        const query = req.query.query;
+        const results = await tmdbService.buscarPeliculasEnTMDB(query);
+        res.status(200).json(results);
     } catch (e) {
         res.status(500).json({ message: e.message });
     }
 };
+
+const obtenerDetalle = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const movie = await tmdbService.obtenerDetallePeliculaPorId(id);
+        res.status(200).json(movie);
+    } catch (e) {
+        res.status(404).json({ message: e.message });
+    }
+};
+
+export { buscarPelicula, obtenerDetalle };

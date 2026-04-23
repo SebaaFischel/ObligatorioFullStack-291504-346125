@@ -1,11 +1,11 @@
 const usuarioDto = (usuario) => {
     return {
         id: usuario._id,
-        nombre: usuario.nombre,
         nombreUsuario: usuario.nombreUsuario,
+        nombre: usuario.nombre,
+        apellido: usuario.apellido,
         mail: usuario.mail,
         rol: usuario.rol,
-        plan: usuario.plan,
         createdAt: usuario.createdAt
     }
 }

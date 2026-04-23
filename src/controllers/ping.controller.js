@@ -1,3 +1,5 @@
-export const ping = (req, res) => {
-    res.json({ message: "pong" });
+const pong = (req, res) => {
+    res.status(200).json({ message: "pong" });
 };
+
+export { pong };

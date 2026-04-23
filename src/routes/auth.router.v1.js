@@ -1,11 +1,11 @@
 import express from "express";
-import { login, register } from "../controllers/auth.controller.v1.js";
-import { registerValidatorMiddleware } from "../middleware/register.validator.middleware.js";
-import { loginValidatorMiddleware } from "../middleware/login.validator.middleware.js";
+import { login, registrar } from "../controllers/auth.controller.js";
+import { registrarUsuarioValidatorMiddleware } from "../middlewares/registrar.usuario.validator.middleware.js";
+import { loginUsuarioValidatorMiddleware } from "../middlewares/login.usuario.validator.middleware.js";
 
-const router = express.Router();
+const authRouter = express.Router();
 
-router.post("/register", registerValidatorMiddleware, register);
-router.post("/login", loginValidatorMiddleware, login);
+authRouter.post("/register", registrarUsuarioValidatorMiddleware, registrar);
+authRouter.post("/login", loginUsuarioValidatorMiddleware, login);
 
-export default router;
+export { authRouter };

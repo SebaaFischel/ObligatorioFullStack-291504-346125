@@ -1,21 +1,21 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import User from "../models/user.js";
+import { Usuario } from "../modelos/usuario.model.js";
 import { usuarioDto } from "../dtos/usuario.dto.js";
+import { CredencialesInvalidasError } from "../errors/CredencialesInvalidasError.js";
+import { UsuarioDuplicadoError } from "../errors/UsuarioDuplicadoError.js";
 
-export const doLogin = async ({ email, password }) => {
+const doLogin = async ({ mail, contrasena }) => {
 
-    const u = await User.findOne({ email: email });
+    const u = await Usuario.findOne({ mail: mail });
 
     if (u) {
-
-        const esValida = await bcrypt.compare(password, u.password);
+        const esValida = await bcrypt.compare(contrasena, u.contrasena);
 
         if (esValida) {
-
             const token = jwt.sign(
-                { idUsu: u._id.toString(), rolUsu: u.role },
-                process.env.JWT_SECRET,
+                { idUsu: u._id.toString(), rolUsu: u.rol },
+                process.env.JWT_SECRET_KEY,
                 { expiresIn: "1h" }
             );
 
@@ -23,20 +23,28 @@ export const doLogin = async ({ email, password }) => {
         }
     }
 
-
-    throw new Error("no autorizado");
+    throw new CredencialesInvalidasError();
 };
 
-export const registerUser = async ({ name, username, email, password, role }) => {
-    const contraHasheada = await bcrypt.hash(password, 10);
-    const nuevoUsuario = {
-        name,
-        username,
-        email,
-        password: contraHasheada,
-        role,
-        plan: role === "user" ? "plus" : undefined
-    };
-    const usuarioGuardado = await User.create(nuevoUsuario);
-    return usuarioDto(usuarioGuardado);
+const registerUser = async ({ nombre, nombreUsuario, mail, contrasena, rol }) => {
+    try {
+        const contraHasheada = await bcrypt.hash(contrasena, 10);
+        const nuevoUsuario = {
+            nombre,
+            nombreUsuario,
+            mail,
+            contrasena: contraHasheada,
+            rol,
+            plan: rol === "user" ? "plus" : undefined
+        };
+        const usuarioGuardado = await Usuario.create(nuevoUsuario);
+        return usuarioDto(usuarioGuardado);
+    } catch (error) {
+        if (error.code === 11000) {
+            throw new UsuarioDuplicadoError();
+        }
+        throw error;
+    }
 };
+
+export { doLogin, registerUser };
