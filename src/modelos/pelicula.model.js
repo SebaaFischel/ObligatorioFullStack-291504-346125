@@ -32,6 +32,9 @@ const peliculaSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "Categoria",
             required: true
+        },
+        imagenURL: {
+            type: String
         }
     },
     {

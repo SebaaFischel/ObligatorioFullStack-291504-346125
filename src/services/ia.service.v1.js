@@ -19,10 +19,13 @@ const mejorarReseña = async (reseñaOriginal) => {
 
         return { reseñaOriginal, reseñaMejorada };
     } catch (e) {
-        if (e.message.includes("404")) {
-            throw new Error("El modelo 'gemini-2.5-flash-lite' no está disponible en esta cuenta. Usa 'gemini-1.5-flash' para que funcione.");
-        }
-        throw e;
+        console.log("Gemini falló, usando fallback:", e.message);
+        // Fallback: devolvemos la original para que la app siga funcionando
+        return { 
+            reseñaOriginal, 
+            reseñaMejorada: reseñaOriginal, 
+            aviso: "IA no disponible temporalmente" 
+        };
     }
 };
 

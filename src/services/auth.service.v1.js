@@ -34,9 +34,10 @@ const registerUser = async ({ nombre, nombreUsuario, mail, contrasena, rol }) =>
             nombreUsuario,
             mail,
             contrasena: contraHasheada,
-            rol,
-            plan: rol === "user" ? "plus" : undefined
+            rol: "user",
+            plan: "plus"
         };
+
         const usuarioGuardado = await Usuario.create(nuevoUsuario);
         return usuarioDto(usuarioGuardado);
     } catch (error) {

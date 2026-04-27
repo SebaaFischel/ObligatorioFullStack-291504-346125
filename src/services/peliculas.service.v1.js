@@ -5,23 +5,35 @@ import { PeliculaNoEncontradaError } from "../errors/PeliculaNoEncontradaError.j
 import { UsuarioNoEncontradoError } from "../errors/UsuarioNoEncontradoError.js";
 import { LimitePeliculasAlcanzadoError } from "../errors/LimitePeliculasAlcanzadoError.js";
 import { PeliculaDuplicadaError } from "../errors/PeliculaDuplicadaError.js";
+import { v2 as cloudinary } from 'cloudinary';
 
-const obtenerPeliculasUsuario = async (idUsuario, pagina = 1, limite = 10) => {
+const obtenerPeliculasUsuario = async (idUsuario, pagina = 1, limite = 10, idCategoria, titulo) => {
+    const query = { idUsuario };
+
+    // Lógica de filtros dinámica
+    if (idCategoria) {
+        query.idCategoria = idCategoria;
+    }
+
+    if (titulo) {
+        query.titulo = { $regex: titulo, $options: "i" };
+    }
+
     const skip = (pagina - 1) * limite;
-    const peliculas = await Pelicula.find({ idUsuario })
+    const peliculas = await Pelicula.find(query)
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limite)
         .populate("idCategoria", "nombre");
-    
-    const total = await Pelicula.countDocuments({ idUsuario });
-    
+
+    const total = await Pelicula.countDocuments(query);
+
     return {
         peliculas,
         paginacion: {
             total,
-            pagina,
-            limite,
+            pagina: Number(pagina),
+            limite: Number(limite),
             paginasTotales: Math.ceil(total / limite)
         }
     };
@@ -39,7 +51,7 @@ const agregarPeliculaUsuario = async (datosEntrada, idUsuario) => {
     }
 
     const detallesTMDB = await obtenerDetallePeliculaPorId(datosEntrada.tmdbId);
-    
+
     try {
         const nuevaPelicula = await Pelicula.create({
             idUsuario: idUsuario,
@@ -87,9 +99,33 @@ const eliminarPeliculaUsuario = async (idUsuario, tmdbId) => {
     return peliculaEliminada;
 };
 
+const agregarImagenPelicula = async (img, idPelicula, idUsu) => {
+    const pelicula = await Pelicula.findOne({ _id: idPelicula, idUsuario: idUsu });
+    if (!pelicula) {
+        throw new PeliculaNoEncontradaError();
+    }
+    // Configuramos acá adentro para asegurar que el .env esté cargado
+    cloudinary.config({
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET
+    });
+    const imgBase64 = Buffer.from(img.buffer).toString("base64");
+    const uri = "data:" + img.mimetype + ";base64," + imgBase64;
+    try {
+        const result = await cloudinary.uploader.upload(uri);
+        pelicula.imagenURL = result.secure_url;
+        return await pelicula.save();
+    } catch (e) {
+        console.log("Error al subir a Cloudinary:", e);
+        throw new Error("Error al subir la imagen a la nube");
+    }
+};
+
 export {
     obtenerPeliculasUsuario,
     agregarPeliculaUsuario,
     actualizarPeliculaUsuario,
-    eliminarPeliculaUsuario
+    eliminarPeliculaUsuario,
+    agregarImagenPelicula
 };

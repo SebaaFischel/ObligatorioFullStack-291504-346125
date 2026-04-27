@@ -2,11 +2,13 @@ import * as peliculasService from "../services/peliculas.service.v1.js";
 
 const obtenerPeliculas = async (req, res) => {
     try {
-        const { pagina, limite } = req.query;
+        const { pagina, limite, idCategoria, titulo } = req.query;
         const resultado = await peliculasService.obtenerPeliculasUsuario(
             req.idUsu,
             parseInt(pagina) || 1,
-            parseInt(limite) || 10
+            parseInt(limite) || 10,
+            idCategoria,
+            titulo
         );
         res.status(200).json(resultado);
     } catch (e) {
@@ -43,9 +45,20 @@ const eliminarPelicula = async (req, res) => {
     }
 };
 
+const subirImagen = async (req, res) => {
+    try {
+        const idPelicula = req.params.id;
+        const peliculaActualizada = await peliculasService.agregarImagenPelicula(req.file, idPelicula, req.idUsu);
+        res.status(200).json(peliculaActualizada);
+    } catch (e) {
+        res.status(e.code || 400).json({ message: e.message });
+    }
+};
+
 export {
     obtenerPeliculas,
     agregarPelicula,
     actualizarPelicula,
-    eliminarPelicula
+    eliminarPelicula,
+    subirImagen
 };
