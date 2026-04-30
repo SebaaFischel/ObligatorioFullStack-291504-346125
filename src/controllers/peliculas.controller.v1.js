@@ -39,7 +39,7 @@ const eliminarPelicula = async (req, res) => {
     try {
         const tmdbId = req.params.tmdbId;
         await peliculasService.eliminarPeliculaUsuario(req.idUsu, tmdbId);
-        res.status(204).send();
+        res.status(200).json({ message: "Película eliminada de tu biblioteca con éxito" });
     } catch (e) {
         res.status(e.code || 400).json({ message: e.message });
     }
