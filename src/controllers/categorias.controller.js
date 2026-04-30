@@ -30,7 +30,7 @@ const actualizarCategoria = async (req, res) => {
 const eliminarCategoria = async (req, res) => {
     try {
         await categoriasService.eliminarCategoria(req.params.id);
-        res.status(204).send();
+        res.status(200).json({ message: "Categoría eliminada con éxito" });
     } catch (e) {
         res.status(e.code || 400).json({ message: e.message });
     }

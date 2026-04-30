@@ -4,7 +4,6 @@ import { optimizarReseñaValidatorMiddleware } from "../middlewares/optimizar.re
 
 const iaRouter = express.Router();
 
-// Cambiamos 'reseña' por 'resena' para evitar problemas de encoding en la URL
 iaRouter.post("/optimizar-resena", optimizarReseñaValidatorMiddleware, optimizarReseña);
 
 export { iaRouter };

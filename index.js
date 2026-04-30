@@ -22,7 +22,6 @@ app.use(cors());
 app.use(helmet());
 app.use(loggerMiddleware);
 
-// Rutas Públicas
 app.use("/v1/ping", pingRouter);
 app.use("/v1/auth", authRouter);
 
@@ -30,7 +29,6 @@ app.get("/", (req, res) => {
     res.json({ message: "Obligatorio 1 - API Running" });
 });
 
-// Rutas Privadas
 app.use(authMiddleware);
 app.use("/v1/categories", categoriasRouter);
 app.use("/v1/users", usuariosRouter);

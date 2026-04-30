@@ -10,7 +10,7 @@ import {
 import { agregarPeliculaValidatorMiddleware } from "../middlewares/agregar.pelicula.validator.middleware.js";
 
 const peliculasRouter = express.Router();
-const upload = multer(); // Lógica del profesor en notas-api
+const upload = multer();
 
 peliculasRouter.get("/", obtenerPeliculas);
 peliculasRouter.post("/", agregarPeliculaValidatorMiddleware, agregarPelicula);

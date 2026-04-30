@@ -6,12 +6,13 @@ import {
     eliminarCategoria
 } from "../controllers/categorias.controller.js";
 import { crearCategoriaValidatorMiddleware } from "../middlewares/crear.categoria.validator.middleware.js";
+import { esAdmin } from "../middlewares/role.middleware.js";
 
 const categoriasRouter = express.Router();
 
 categoriasRouter.get("/", obtenerCategorias);
-categoriasRouter.post("/", crearCategoriaValidatorMiddleware, crearCategoria);
-categoriasRouter.put("/:id", actualizarCategoria);
-categoriasRouter.delete("/:id", eliminarCategoria);
+categoriasRouter.post("/", esAdmin, crearCategoriaValidatorMiddleware, crearCategoria);
+categoriasRouter.put("/:id", esAdmin, actualizarCategoria);
+categoriasRouter.delete("/:id", esAdmin, eliminarCategoria);
 
 export { categoriasRouter };

@@ -20,7 +20,6 @@ const mejorarReseña = async (reseñaOriginal) => {
         return { reseñaOriginal, reseñaMejorada };
     } catch (e) {
         console.log("Gemini falló, usando fallback:", e.message);
-        // Fallback: devolvemos la original para que la app siga funcionando
         return { 
             reseñaOriginal, 
             reseñaMejorada: reseñaOriginal, 

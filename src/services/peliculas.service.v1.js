@@ -10,7 +10,6 @@ import { v2 as cloudinary } from 'cloudinary';
 const obtenerPeliculasUsuario = async (idUsuario, pagina = 1, limite = 10, idCategoria, titulo) => {
     const query = { idUsuario };
 
-    // Lógica de filtros dinámica
     if (idCategoria) {
         query.idCategoria = idCategoria;
     }
@@ -104,7 +103,7 @@ const agregarImagenPelicula = async (img, idPelicula, idUsu) => {
     if (!pelicula) {
         throw new PeliculaNoEncontradaError();
     }
-    // Configuramos acá adentro para asegurar que el .env esté cargado
+
     cloudinary.config({
         cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
         api_key: process.env.CLOUDINARY_API_KEY,

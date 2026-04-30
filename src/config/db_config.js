@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 const conectarDB = async () => {
-    // Usamos el nombre de variable que pide el profesor en su guía
     const connectionString = process.env.MONGODB_CONNECTION_STRING;
 
     try {
