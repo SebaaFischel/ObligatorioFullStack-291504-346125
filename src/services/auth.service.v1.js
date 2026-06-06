@@ -6,23 +6,23 @@ import { CredencialesInvalidasError } from "../errors/CredencialesInvalidasError
 import { UsuarioDuplicadoError } from "../errors/UsuarioDuplicadoError.js";
 
 const doLogin = async ({ mail, contrasena }) => {
-
     const u = await Usuario.findOne({ mail: mail });
-
     if (u) {
         const esValida = await bcrypt.compare(contrasena, u.contrasena);
-
         if (esValida) {
             const token = jwt.sign(
-                { idUsu: u._id.toString(), rolUsu: u.rol },
+                { 
+                    idUsu: u._id.toString(), 
+                    rolUsu: u.rol,
+                    planUsu: u.plan,      
+                    nombreUsu: u.nombre    
+                },
                 process.env.JWT_SECRET,
                 { expiresIn: "1h" }
             );
-
             return { token };
         }
     }
-
     throw new CredencialesInvalidasError();
 };
 
