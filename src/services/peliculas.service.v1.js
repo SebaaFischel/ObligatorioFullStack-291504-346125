@@ -120,11 +120,22 @@ const agregarImagenPelicula = async (img, idPelicula, idUsu) => {
         throw new Error("Error al subir la imagen a la nube");
     }
 };
+const obtenerEstadisticasUsuario = async (idUsuario) => {
+    const total = await Pelicula.countDocuments({ idUsuario });
+
+    const bajo     = await Pelicula.countDocuments({ idUsuario, rating: { $lte: 3 } });
+    const medio    = await Pelicula.countDocuments({ idUsuario, rating: { $gte: 4, $lte: 6 } });
+    const alto     = await Pelicula.countDocuments({ idUsuario, rating: { $gte: 7, $lte: 8 } });
+    const excelente = await Pelicula.countDocuments({ idUsuario, rating: { $gte: 9 } });
+
+    return { total, bajo, medio, alto, excelente };
+};
 
 export {
     obtenerPeliculasUsuario,
     agregarPeliculaUsuario,
     actualizarPeliculaUsuario,
     eliminarPeliculaUsuario,
-    agregarImagenPelicula
+    agregarImagenPelicula,
+    obtenerEstadisticasUsuario   
 };

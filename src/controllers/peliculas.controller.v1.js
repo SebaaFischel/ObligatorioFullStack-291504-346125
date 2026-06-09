@@ -54,11 +54,20 @@ const subirImagen = async (req, res) => {
         res.status(e.code || 400).json({ message: e.message });
     }
 };
+const obtenerEstadisticas = async (req, res) => {
+    try {
+        const resultado = await peliculasService.obtenerEstadisticasUsuario(req.idUsu);
+        res.status(200).json(resultado);
+    } catch (e) {
+        res.status(e.code || 500).json({ message: e.message });
+    }
+};
 
 export {
     obtenerPeliculas,
     agregarPelicula,
     actualizarPelicula,
     eliminarPelicula,
-    subirImagen
+    subirImagen,
+    obtenerEstadisticas
 };
