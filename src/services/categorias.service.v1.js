@@ -1,6 +1,7 @@
 import { Categoria } from "../modelos/categoria.model.js";
 import { CategoriaNoEncontradaError } from "../errors/CategoriaNoEncontradaError.js";
 import { CategoriaDuplicadaError } from "../errors/CategoriaDuplicadaError.js";
+import { Pelicula } from "../modelos/pelicula.model.js";
 
 const obtenerCategorias = async () => {
     return await Categoria.find();
@@ -33,6 +34,13 @@ const actualizarCategoria = async (id, datos) => {
 };
 
 const eliminarCategoria = async (id) => {
+    const peliculaAsociada = await Pelicula.findOne({ idCategoria: id });
+    
+    if (peliculaAsociada) {
+        const error = new Error("No se puede eliminar la categoría porque hay películas que la están usando");
+        error.code = 400; 
+        throw error;
+    }
     const categoriaEliminada = await Categoria.findByIdAndDelete(id);
     if (!categoriaEliminada) {
         throw new CategoriaNoEncontradaError();
